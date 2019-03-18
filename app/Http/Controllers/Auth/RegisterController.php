@@ -7,6 +7,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Model\PhoneCodes;
+use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
@@ -40,6 +46,27 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegistrationForm()
+    {
+        $phone_codes = PhoneCodes::getAllPhoneCodes(65);
+        return view('auth.register', compact('phone_codes'));
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        Session::flash('message', [ 'message' => 'Selamat, anda sudah teregistrasi',
+             'action'=>'success' ]);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -48,12 +75,26 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $customMessage = array(
+            'name.required' => "Nama Lengkap Harus Diisi",
+            'name.max' => "Panjang Maksimal untuk Masukkan Nama Lengkap adalah 100",
+            'email.required' => "Email Harus Diisi",
+            'email.email' => "Email Tidak Diisi sesuai format email yang seharusnya (contoh xxxx@xx.xx)",
+            'email.unique' => "Email Yang Anda Masukkan Sudah Diregistrasikan. Silahkan Memilih Alamat Email Lain...",
+            'email.max' => "Email Yang Anda Masukkan Dibatasi Maksimal 255 Karakter",
+            'password.required' => "Password Harus Diisi",
+            'password.confirmed' => "Password dan Konfirmasi Password yang anda masukkan tidak sama....",
+            'password.min' => "Password minimal 8 Huruf",
+            'password.regex' => "Password harus terdiri dari Alphabet dan Angka",
+        );
+
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:100'],
-            'user_name' => ['required', 'string', 'user_name', 'max:100', 'unique:users'],
+            'user_name' => ['required', 'string', 'max:100', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            'address' => ['required', 'string', 'max:100'],
+            'password' => ['required', 'string', 'min:8', 'regex:/^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$/', 'confirmed'],
+        ], $customMessage);
     }
 
     /**
@@ -64,10 +105,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $phone_number =  $data['phone_code']. $data['phone_number'];
+
         return User::create([
+            'user_name' => $data['user_name'],
             'name' => $data['name'],
             'email' => $data['email'],
+            'address' => $data['address'],
+            'phone_number' => $phone_number,
             'password' => Hash::make($data['password']),
+            'role_id' => 2
         ]);
     }
 }

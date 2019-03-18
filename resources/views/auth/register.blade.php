@@ -56,28 +56,35 @@
 
 
                         <div class="form-group row">
-                            <label for="user_name" class="col-md-4 col-form-label text-md-right">{{ __('Alamat') }}</label>
+                            <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Alamat') }}</label>
 
                             <div class="col-md-6">
-                                <input id="user_name" type="text" class="form-control{{ $errors->has('user_name') ? ' is-invalid' : '' }}" name="user_name" value="{{ old('user_name') }}" required autofocus>
+                                <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}" required autofocus>
 
-                                @if ($errors->has('user_name'))
+                                @if ($errors->has('address'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('user_name') }}</strong>
+                                        <strong>{{ $errors->first('address') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
+
                         <div class="form-group row">
-                            <label for="user_name" class="col-md-4 col-form-label text-md-right">{{ __('Alamat') }}</label>
+                            <label for="phone_number" class="col-md-4 col-form-label text-md-right">{{ __('Nomor Handphone') }}</label>
 
                             <div class="col-md-6">
-                                <input id="user_name" type="text" class="form-control{{ $errors->has('user_name') ? ' is-invalid' : '' }}" name="user_name" value="{{ old('user_name') }}" required autofocus>
+                                <select id="phone_code" class="form-control" name="phone_code" value="{{ old('phone_code') }}" required autofocus>
+                                    @foreach ($phone_codes as $phone_code)
+                                        <option value="{{ '+'.$phone_code->phone_code}}">{{$phone_code->country}}/+{{$phone_code->phone_code}}</option>
+                                    @endforeach
+                                </select>
 
-                                @if ($errors->has('user_name'))
+                                <input id="phone_number" type="text" class="form-control{{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number') }}" required autofocus>
+
+                                @if ($errors->has('phone_number'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('user_name') }}</strong>
+                                        <strong>{{ $errors->first('phone_number') }}</strong>
                                     </span>
                                 @endif
                             </div>
