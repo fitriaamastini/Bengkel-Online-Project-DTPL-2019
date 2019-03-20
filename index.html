@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+
+<!-- jQuery library -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+
+<!-- Latest compiled JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+  <meta charset="UTF-8">
+  <title>Sliding Login/Register Form</title>
+
+
+
+      <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+<style>
+.wrap {
+  /* The image used */
+  background-image: url("bg.jpg");
+  background-position: center;
+background-size: cover;
+}
+</style>
+<body>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+
+<div class="wrap bg">
+
+  <form class="login">
+    <div class="toggle-bar">
+      <div class="toggle-login active">
+        <span style="font-size: 12px;
+  ">Login</span>
+      </div>
+      <div class="toggle-register">
+        <span  style="font-size: 12px;
+  ">Registrasi Pengguna</span>
+      </div>
+
+    </div>
+
+    <!-- <div>
+        <p> register </p>
+        nama lengkap: <input type="text" id="name_reg" name="fname">
+        username: <input type="text" id="username_reg" name="fname">
+        email: <input type="text" id="email_reg" name="fname">
+        alamat: <input type="text" id="alamat_reg" name="fname">
+        no Handphone: <input type="text" id="hp_reg" name="fname">
+        password: <input type="text" id="pass_reg" name="fname">
+        confirm password: <input type="text" id="cpass_reg" name="fname">
+        <button id="reg_submit_button">register</button>
+    </div>
+
+    <div>
+      <p> login </p>
+      id: <input type="text" id="id_login" name="fname">
+    name: <input type="text" id="name_login" name="fname">
+      <button id="tot_login">login</button>
+
+    </div> -->
+
+
+    <img src="wrkshp.png" style="  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  ">  </img>
+
+    <div class="login-body">
+      <div class="input-section" style="margin-top: 10px;">
+        <i class="fas fa-user"></i>
+        <input class="user-input" type="text" id="uname_login"  name="uname_login" placeholder="Username">
+      </div>
+      <div class="input-section">
+        <i class="fas fa-lock"></i>
+        <input class="user-input" type="password" id="pass_login"  name="pass_login"  placeholder="Password">
+      </div>
+      <p id="forgot-password" style="margin-top: 10px;">Forgot your password?</p>
+      <button class="btn" type="button" id="btn-login" onclick="login_form()">Login</button>
+    </div>
+
+
+
+    <div class="register-body" style="display:none;">
+        <div class="input-section" style="margin-top: 10px;">
+          <i class="fas fa-user"></i>
+          <input class="user-input" type="text" id="name_reg" name="name_reg" placeholder="Fullname" >
+        </div>
+        <div class="input-section">
+          <i class="fas fa-user-circle"></i>
+          <input class="user-input" type="text" id="uname_reg" placeholder="Username" >
+        </div>
+        <div class="input-section">
+          <i class="fas fa-envelope-open"></i>
+          <input class="user-input" type="email" id="email_reg"  name="email_reg" placeholder="email" >
+        </div>
+        <div class="input-section">
+          <i class="fas fa-address-book"></i>
+          <input class="user-input" type="text"  id="alamat_reg" name="alamat_reg" placeholder="alamat" >
+        </div>
+        <div class="input-section">
+          <i class="fas fa-mobile"></i>
+          <input class="user-input" type="number" id="hp_reg" name="hp_reg"  placeholder="hp" >
+          <!-- <input class="user-input" type="number" id="hp_reg" name="hp_reg"  placeholder="hp" > -->
+        </div>
+        <div class="input-section">
+          <i class="fas fa-lock"></i>
+          <input class="user-input" type="password" id="pass_reg" name="pass_reg" placeholder="password" >
+        </div>
+        <div class="input-section">
+          <i class="fas fa-lock"></i>
+          <input class="user-input" type="password" id="cpass_reg" name="cpass_reg" placeholder="confirm password" >
+        </div>
+      <p id="registered" style="margin-top: 10px;">Already registered?</p>
+      <button class="btn" type="button" onclick="register_form()">Register</button>
+  </form>
+</div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+
+  <script>
+  function login_form() {
+
+    console.log("tes");
+
+    var uname_login = document.getElementById("uname_login").value;
+    var pass_login = document.getElementById("pass_login").value;
+    var validateSuccess = false;
+    var y = {};
+
+    fetch('./test.json')
+ .then(function(response) {
+   return response.json();
+ })
+ .then(function(myJson) {
+   console.log(myJson);
+   console.log(myJson.users);
+   y = myJson.users;
+   validUser = false;
+   for (i = 0; i < y.length; i++) {
+     if( y[i].username === uname_login && y[i].password === pass_login) {
+       validUser = true;
+       $.ajax({
+       url: 'login.php',
+       cache: false,
+       type: 'POST',
+       data : {
+           "userlogin": uname_login,
+       },
+       success: function(json) {
+           alert("login berhasil");
+           console.log("Done, data sent");             }
+       });
+       window.location.href = '/index2.html?user='+uname_login;
+     }
+   };
+   if (validUser === false) {
+     alert("Password dan username salah atau tidak terdaftar, silahkan coba lagi atau register terlebih dahulu");
+   }
+ });
+
+    // console.log(fname);
+    // console.log("fname", fname);
+    // if (fname.length > 8 )
+    // {
+    //     validateSuccess = true;
+    // }
+    // if ( fname.length <= 8) {
+    //     validateSuccess = false;
+    //     alert("nama lengkap panjangnya harus lebih dari 8");
+    //     document.getElementById("name_reg").focus();
+    // }
+    //
+
+    // console.log("vall", validateSuccess);
+    // if (validateSuccess === true ) {
+    //   $.ajax({
+    //   url: 'save.php',
+    //   cache: false,
+    //   type: 'POST',
+    //   data : {
+    //       "fullname": fname,
+    //       "username": uname,
+    //       "email": email,
+    //       "address": alamat,
+    //       "hp": hp,
+    //       "pass": pass,
+    //       "cpass": cpass
+    //   },
+    //   success: function(json) {
+    //       console.log("Done, data sent");             }
+    //   });
+    // }
+  }
+  </script>
+
+  <script>
+
+  function validateEmail(email)
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
+
+  function validateHP(no)
+{
+    var re = /\+?([ -]?\d+)+|\(\d+\)([ -]\d+)/;
+    return re.test(no);
+}
+
+function validatePass(pass)
+{
+  var re = /\[0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+/;
+  return re.test(pass);
+}
+
+  function register_form() {
+
+    console.log("tes");
+
+    var fname = document.getElementById("name_reg").value;
+    var uname = document.getElementById("uname_reg").value;
+    var email = document.getElementById("email_reg").value;
+    var alamat = document.getElementById("alamat_reg").value;
+    var hp = document.getElementById("hp_reg").value;
+    var pass = document.getElementById("pass_reg").value;
+    var cpass = document.getElementById("cpass_reg").value;
+    var validateSuccess = false;
+    var validName = false;
+    var validUname= true;
+    var validEmail = false;
+    var validAlamat = false;
+    var validHP = false;
+    var validPass = false;
+    var validCpass = false;
+
+    // console.log("fname", fname);
+    // var uname = document.forms["RegForm"]["username_reg"];
+    // var email = document.forms["RegForm"]["email_reg"];
+    // var alamat =  document.forms["RegForm"]["alamat_reg"];
+    // var hp = document.forms["RegForm"]["hp_reg"];
+    // var pass = document.forms["RegForm"]["pass_reg"];
+    // var cpass = document.forms["RegForm"]["cpass_reg"];
+    // var validateSuccess = false;
+
+    console.log(fname);
+    console.log("fname", fname);
+    // if (fname.length > 8 )
+    // {
+    //     validateSuccess = true;
+    // }
+    if ( fname.length > 100 || fname === "") {
+        alert("nama lengkap tidak melebihi 100 karakter atau nama lengkap tidak boleh kosong");
+        document.getElementById("name_reg").focus();
+    }
+
+    if (fname.length <= 100 && fname !== "") {
+      validName = true;
+    }
+
+
+
+    if(validName === true) {
+      if (uname === "") {
+        alert("username tidak boleh kosong");
+        document.getElementById("uname_reg").focus();
+      }
+      else {
+      $.ajax({
+      url: 'test.json',
+      type: 'GET',
+      dataTyoe: 'json',
+      async: false,
+      success: function(json) {
+          y = json;
+          for (i = 0; i < y.length; i++) {
+              if( y[i].username === uname) {
+                console.log("masukkk pak hadjii");
+               alert("username telah terdaftar, gunakan username lain");
+               document.getElementById("uname_reg").focus();
+               validUname = false;
+             }
+            };
+
+            console.log("validunameInd", validUname);
+         }
+      });
+  console.log("datass", validUname);
+    }
+  }
+
+    if(validUname === true) {
+      if(validateEmail(email) === true) {
+        validEmail = true;
+      }
+      else {
+        alert("format email tidak sesuai dan email tidak boleh kosong");
+        document.getElementById("email_reg").focus();
+      }
+    }
+
+    if(validEmail === true) {
+      if ( alamat.length > 200 || alamat === "") {
+          alert("alamat tidak melebihi 200 karakter atau alamat tidak boleh kosong");
+          document.getElementById("alamat_reg").focus();
+      }
+
+      else if (alamat.length <= 200 && alamat !== "") {
+        validAlamat = true;
+      }
+    }
+
+    if(validEmail === true) {
+      if ( alamat.length > 200 || alamat === "") {
+          alert("alamat tidak melebihi 200 karakter atau alamat tidak boleh kosong");
+          document.getElementById("alamat_reg").focus();
+      }
+
+      else if (alamat.length <= 200 && alamat !== "") {
+        validAlamat = true;
+      }
+    }
+
+    if(validEmail === true) {
+      if(validateHP(hp) === true) {
+        validHP = true;
+      }
+      else {
+        alert("format no HP tidak sesuai dan no HP tidak boleh kosong");
+        document.getElementById("hp_reg").focus();
+      }
+    }
+
+
+    if (validHP === true) {
+      if(/\d/.test(pass) && /[a-zA-Z]/.test(pass) && pass.length >= 8 ) {
+        validPass = true;
+      }
+      else {
+        alert("Password harus alphanumeric dan minimal 8 digit");
+      }
+    }
+
+    if (validPass === true) {
+      if(pass === cpass) {
+        validCpass = true;
+      }
+      else {
+        alert("konfirmasi password yang anda masukkan tidak sama");
+      }
+    }
+
+
+
+    console.log("vall", validateSuccess);
+    if (validName === true && validUname === true && validEmail === true && validHP === true && validAlamat === true && validPass == true && validCpass === true  ) {
+      console.log("masuk sodara");
+      $.ajax({
+      url: 'save.php',
+      cache: false,
+      type: 'POST',
+      data : {
+          "fullname": fname,
+          "username": uname,
+          "email": email,
+          "address": alamat,
+          "hp": hp,
+          "pass": pass,
+          "cpass": cpass
+      },
+      success: function(json) {
+          alert("Yeyy registrasi berhasil, silahkan melakukan login");
+          window.location.href = '/';
+          console.log("Done, data sent");             }
+      });
+    }
+  }
+  </script>
+
+  <!-- <script>
+
+
+  $(document).ready(function(){
+  $(document).on("click", "#tot_login", function(){
+    var x = document.getElementById("id_login").value;
+    var x1 = document.getElementById("name_login").value;
+    var y = {};
+    console.log("tes");
+
+
+
+     fetch('./test.json')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(myJson);
+    console.log(myJson[0]);
+    y = myJson;
+    for (i = 0; i < y.length; i++) {
+      if( y[i].name === x1) {
+        alert("BENER COK");
+      }
+    };
+  });
+
+   });
+  });
+
+  $(document).ready(function(){
+  $(document).on("click", "#tot", function(){
+    var x = document.getElementById("idz").value;
+    var x1 = document.getElementById("nama").value;
+    var y = {};
+    console.log("tes");
+
+    $.ajax({
+    url: 'save.php',
+    cache: false,
+    type: 'POST',
+    data : {
+        "id" : x,
+        "name" : x1,
+    },
+    success: function(json) {
+        console.log("Done, data sent");             }
+  });
+
+  //    fetch('./test.json')
+  // .then(function(response) {
+  //   return response.json();
+  // })
+  // .then(function(myJson) {
+  //   console.log(myJson);
+  //   y = myJson;
+  //   if( x === y.user.name) {
+  //     alert("BENER COK");
+  //   }
+  // });
+
+   });
+  });
+  </script> -->
+
+  <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>

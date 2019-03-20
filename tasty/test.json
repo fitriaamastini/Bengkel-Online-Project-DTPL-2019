@@ -1,0 +1,28 @@
+[
+   {
+      "id":1,
+      "name":"Charlie"
+   },
+   {
+      "id":2,
+      "name":"Brown"
+   },
+   {
+      "id":3,
+      "name":"Subitem",
+      "children":[
+         {
+            "id":4,
+            "name":"Alfa"
+         },
+         {
+            "id":5,
+            "name":"Bravo"
+         }
+      ]
+   },
+   {
+      "id":8,
+      "name":"James"
+   }
+]
